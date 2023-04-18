@@ -1,5 +1,5 @@
 
-# How to create Custom NPM Module?
+# How to a create Custom NPM Module?
 
 Custom React component as a npm Module(Can be installed locally).
 
