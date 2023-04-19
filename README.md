@@ -135,8 +135,8 @@ The final package.json may looks like below.
   "author": "Anandhu",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^16.6.1",
-    "react-dom": "^16.6.3"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
