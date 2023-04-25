@@ -19,11 +19,19 @@ Custom React component as a npm Module(Can be installed locally).
 
 ```bash
   yarn add @babel/cli @babel/core --dev
+  
+  or
+  
+  npm install --save-dev @babel/cli @babel/core
 ```
 **Step 3:** Babel preset Installation for convertinfg the code.
 
 ```bash
   yarn add @babel/preset-env @babel/preset-react --dev
+  
+  or 
+  
+  npm install --save-dev @babel/preset-env @babel/preset-react
 ```
 **Step 4:** Now create a .babelrc file and add the following code in it.
 
