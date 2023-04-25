@@ -120,7 +120,7 @@ The final package.json may looks like below.
 
 Since it is Typescript. I've also installed typescript, typescript react with it.
 
-**Step 7:** Its time to convert the code to ES5/ES6.
+**Step 7:** Its time to convert the code.
 
 ```bash
   // For Typescript
