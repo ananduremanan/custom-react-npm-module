@@ -37,7 +37,7 @@ Custom React component as a npm Module(Can be installed locally).
 
 ```bash
 {
-  "presets": ["@babel/preset-react", "@babel/preset-env" "@babel/preset-typescript"]
+  "presets": ["@babel/preset-react", "@babel/preset-env", "@babel/preset-typescript"]
 }
 ```
 
