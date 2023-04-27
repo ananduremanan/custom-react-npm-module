@@ -1,7 +1,7 @@
 
 # How to a create Custom NPM Module for React Components?
 
-This repo is aimed to create a Custom React component as a npm Module(Can be installed locally).
+Custom React component as a npm Module(Can be installed locally).
 
 
 
