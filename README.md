@@ -1,10 +1,6 @@
-
 # How to a create Custom NPM Module for React Components?
 
 Custom React component as a npm Module(Can be installed locally).
-
-
-
 
 ## Installation
 
@@ -15,76 +11,37 @@ Custom React component as a npm Module(Can be installed locally).
   npm init
 ```
 
-**Step 2:** Babel Installation.
-
-```bash
-  yarn add @babel/cli @babel/core --dev
-  
-  or
-  
-  npm install --save-dev @babel/cli @babel/core
-```
-**Step 3:** Babel preset Installation for converting the code.
-
-```bash
-  yarn add @babel/preset-env @babel/preset-react --dev
-  
-  or 
-  
-  npm install --save-dev @babel/preset-env @babel/preset-react
-```
-**Step 4:** Now create a .babelrc file and add the following code in it.
+Add the necessary fields. After the successfull walkthrough a package.json will created and looks like below.
 
 ```bash
 {
-  "presets": ["@babel/preset-react", "@babel/preset-env", "@babel/preset-typescript"]
+  "name": "gittuts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
 ```
 
-The preset "@babel/preset-typescript" used because the component is written in Typescript.
-
-**Step 5:** Create a src folder and add your react.js component in it.
-Sample component(index.js) is given below.
+**Step 2:** Create a src folder in the root add a index.js/index.ts in it also create a component folder and creates some components in it.
 
 ```bash
-  import React, { ChangeEvent, Component } from "react";
-
-  type TextInputProps = {
-    label: string;
-    value: string;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  };
-
-  class TextInput extends Component<TextInputProps> {
-    render() {
-      const { label, value, onChange } = this.props;
-      return (
-        <div>
-          <label htmlFor={label}>{label} Test Input : </label>
-          <input type="text" id={label} value={value} onChange={onChange} />
-        </div>
-      );
-    }
-  }
-
-  export default TextInput;
-```  
-You can also use a functional component as well.
-
-```bash
-  import React from "react";
-
-  export default function TextInput({ label, value, onChange }) {
-    return (
-      <div>
-        <label htmlFor={label}>{label} Text Input : </label>
-        <input type="text" id={label} value={value}  onChange={onChange} />
-      </div>
-    );
-  }
+src
+├── components
+│   ├── Component1
+│   │   └── index.tsx
+│   ├── Component2
+│   │   └── index.tsx
+│   └── Component3
+│       └── index.tsx
+└── index.ts
 ```
 
-**Step 6:** Now, Add react and react-dom as peer-dependencies and dev-dependencies. 
+**Step 3:** Now, Add react and react-dom as peer-dependencies and dev-dependencies. 
 
 ```bash
   yarn add react react-dom --dev
@@ -98,7 +55,7 @@ The final package.json may looks like below.
 
 ```bash
   {
-  "name": "srp1",
+  "name": "custom-npm-package",
   "version": "1.0.0",
   "description": "react custom npm module",
   "main": "index.js",
@@ -113,11 +70,6 @@ The final package.json may looks like below.
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.21.4",
-    "@babel/preset-env": "^7.21.4",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.21.4",
     "@types/react": "^18.0.34",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
