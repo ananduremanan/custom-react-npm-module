@@ -1,4 +1,4 @@
-### <span style="color: red;">Under Maintenance</span>
+### 🔴 Under Maintenance
 
 # How to a create Custom NPM Module for React Components?
 
