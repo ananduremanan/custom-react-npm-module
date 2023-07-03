@@ -82,14 +82,58 @@ The final package.json may looks like below.
 
 Since it is Typescript. I've also installed typescript, typescript react with it.
 
-**Step 7:** Its time to convert the code.
+**Step 4:** Its time to bundle the code. Install [rollup.js](https://rollupjs.org/)
 
 ```bash
-  // For Typescript
-  npx babel src --out-file index.js --extensions .ts,.tsx
+  npm install --save react rollup
+```
+You will also need to install the Rollup plugins for Babel, CommonJS, and Node Resolve by running 
 
-  // For Vanilla
-  npx babel src --out-file index.js
+```bash
+npm install --save-dev @rollup/plugin-babel @rollup/plugin-commonjs @rollup/plugin-node-resolve rollup-plugin-terser
+
+```
+
+**Step 5:**  Configure Rollup
+
+Create a `rollup.config.mjs` or `rollup.config.js` file in the root of your project. In this file, configure Rollup to bundle your React component by specifying the input file, output format, and plugins to use. Here is an example configuration:
+
+```bash
+import babel from 'rollup-plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import external from 'rollup-plugin-peer-deps-external';
+import { terser } from 'rollup-plugin-terser';
+import typescript from "rollup-plugin-typescript2"; // For Typescript
+
+export default [
+  {
+    input: './src/index.ts',
+    output: [
+      {
+        file: 'dist/index.js',
+        format: 'cjs',
+      },
+      {
+        file: 'dist/index.es.js',
+        format: 'es',
+        exports: 'named',
+      }
+    ],
+    plugins: [
+      babel({
+        exclude: 'node_modules/**',
+        presets: ['@babel/preset-react']
+      }),
+      external({
+        includeDependencies: true
+      }),
+      resolve(),
+      terser(),
+      typescript({ useTsconfigDeclarationDir: true }),
+    ]
+  }
+];
+
 ```
 
 To our package.json, let's add this as build command so that we won't have to type it repeatedly. Under "scripts" in package.json add the following.
@@ -97,13 +141,13 @@ To our package.json, let's add this as build command so that we won't have to 
 ```bash
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx babel src --out-file index.js --extensions .ts,.tsx"
+    "build": "npx rollup -c"
   }
 ```
 
-now we can simply use "npm run build" or "yarn build" to convert the code.
+now we can simply use "npm run build" or "yarn build" to bundle the code.
 
-If it compiled without any error you may see an "index.js" file will be generated in the root folder.
+If it compiled without any error you may see an `dist` folder and `build` folder that is generated in the root folder.
 
 ![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/eg_1.png)
 
@@ -127,7 +171,7 @@ This will generate a .tgz file that we can use to install the package locally in
 **Step 9:** Navigate to your other project's directory and install your package using npm install <path to tarball file>. For example:
 
 ```bash
-  npm install ../my-react-input-component/my-react-input-component-1.0.0.tgz
+  npm install '../my-react-input-component/my-react-input-component-1.0.0.tgz'
 ```
 
 **Step 10:** In your other project's code (Check the branch "hostApp" of this repo for sample code), you can import and use your component as follows:
@@ -164,9 +208,4 @@ This will generate a .tgz file that we can use to install the package locally in
 Final output may look like below.
 
 ![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/eg_2.png)
-
-
-## Acknowledgements
-
- - This Repo is inspired by [Manoj Singh Negi's](https://medium.com/recraftrelic/building-a-react-component-as-a-npm-module-18308d4ccde9) Medium blog.
 
