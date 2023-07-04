@@ -1,5 +1,3 @@
-### 🔴 Under Maintenance
-
 # How to a create Custom NPM Module for React Components?
 
 Custom React component as a npm Module(Can be installed locally).
@@ -149,37 +147,31 @@ now we can simply use "npm run build" or "yarn build" to bundle the code.
 
 If it compiled without any error you may see an `dist` folder and `build` folder that is generated in the root folder.
 
-![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/eg_1.png)
+![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/Screenshot%202023-07-03%20172003.png)
 
-The npx babel command we're using will not work out of the box for TypeScript files. The reason is that TypeScript files need to be transpiled by the TypeScript compiler before they can be transformed by Babel.
-
-To transpile TypeScript files before transforming them with Babel, we can use the @babel/preset-typescript preset.
-
-```bash
-npm install --save-dev @babel/cli @babel/preset-typescript
-```
+_image: bundled output_
 
 Note: that if you're using a build tool like Webpack, you may not need to use npx babel at all. Instead, you can use a TypeScript loader like ts-loader or awesome-typescript-loader that will transpile and transform your TypeScript files as part of the build process.
 
-**Step 8:** Lets pack it so we can use it in other projects. Run the following command from  the root folder.
+**Step 6:** Lets pack it so we can use it in other projects. Run the following command from  the root folder.
 
 ```bash
   npm pack
 ```
 This will generate a .tgz file that we can use to install the package locally in other projects.
 
-**Step 9:** Navigate to your other project's directory and install your package using npm install <path to tarball file>. For example:
+**Step 7:** Navigate to your other project's directory and install your package using npm install <path to tarball file>. For example:
 
 ```bash
-  npm install '../my-react-input-component/my-react-input-component-1.0.0.tgz'
+  npm i 'path_to_the_packed_file'
 ```
 
-**Step 10:** In your other project's code (Check the branch "hostApp" of this repo for sample code), you can import and use your component as follows:
+**Step 8:** In your host project's code you can import and use your component as follows:
 
 ```bash
   import logo from "./logo.svg";
   import "./App.css";
-  import TextInput from "srp2";
+  import TextInput from "my_npm_package"; // Importing from the package
   import { useState } from "react";
 
   function App() {
@@ -204,8 +196,3 @@ This will generate a .tgz file that we can use to install the package locally in
   export default App;
 
 ```
-
-Final output may look like below.
-
-![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/eg_2.png)
-
