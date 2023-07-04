@@ -143,7 +143,7 @@ To our package.json, let's add this as build command so that we won't have to 
   }
 ```
 
-now we can simply use "npm run build" or "yarn build" to bundle the code.
+now we can simply use ```npm run build``` or ```yarn build``` to bundle the code.
 
 If it compiled without any error you may see an `dist` folder and `build` folder that is generated in the root folder.
 
