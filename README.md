@@ -1,6 +1,6 @@
 # How to create a Custom NPM Module with React Components?
 
-Custom React component as a npm Module(Can be installed locally).
+This repo is aimed to describe the process of creating a custom NPM package/module with React.JS components. It will guide you through the steps of setting up your development environment, writing and exporting your components, and publishing your package to the NPM registry[Optional]. Additionally, it will provide tips and best practices for maintaining and updating your package.
 
 ## Installation
 
@@ -196,3 +196,14 @@ This will generate a .tgz file that we can use to install the package locally in
   export default App;
 
 ```
+
+Additionally we can use packages like [storybook.js](https://storybook.js.org/) to build UI components and pages in isolation and by doing so we could see the changes that happens to our components without the need of installing it in a host application. You could find the documention for implementing story book [here](https://storybook.js.org/docs/react/get-started/install/).
+
+**Step 9:** Publishing our package to NPM Registry
+
+To publish a package to the npm registry, we need to follow these steps:
+
+- Create an npm account on [npmjs.com](https://www.npmjs.com/signup).
+- Sign in to npm from your terminal using the ```npm login``` command.
+- Prepare your package for publishing.
+- Publish the package from the terminal using the ```npm publish``` command.
