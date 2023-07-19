@@ -145,7 +145,7 @@ To our package.json, let's add this as build command so that we won't have to 
 
 now we can simply use ```npm run build``` or ```yarn build``` to bundle the code.
 
-If it compiled without any error you may see an `dist` folder and `build` folder that is generated in the root folder.
+If it compiled without any error you may see two new folders `dist` and `build` generated in the root folder.
 
 ![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/Screenshot%202023-07-03%20172003.png)
 
