@@ -153,12 +153,18 @@ _image: bundled output_
 
 Note: that if you're using a build tool like Webpack, you may not need to use npx babel at all. Instead, you can use a TypeScript loader like ts-loader or awesome-typescript-loader that will transpile and transform your TypeScript files as part of the build process.
 
-**Step 6:** Lets pack it so we can use it in other projects. Run the following command from  the root folder.
+**Step 6:** Lets pack it so we can use/test it in other projects. Run the following command from  the root folder.
 
 ```bash
   npm pack
 ```
 This will generate a .tgz file that we can use to install the package locally in other projects.
+
+Alternatively, you can link the package for testing purpose(Recommended).
+
+Using `npm link` in your package's root directory, create a global symlink of your package. A shortcut that directs your system to another directory or file is known as a "symlink," short for symbolic link.
+
+Now, create an another application and tell the application to use the global symlink with `npm link your-package-name`. This way, we could save a lot of time.
 
 **Step 7:** Navigate to your other project's directory and install your package using npm install <path to tarball file>. For example:
 
