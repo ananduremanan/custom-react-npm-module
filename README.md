@@ -100,7 +100,7 @@ Create a `rollup.config.mjs` or `rollup.config.js` file in the root of your proj
 import babel from 'rollup-plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import external from 'rollup-plugin-peer-deps-external';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import typescript from "rollup-plugin-typescript2"; // For Typescript
 
 export default [
@@ -145,9 +145,9 @@ To our package.json, let's add this as build command so that we won't have to 
 
 now we can simply use ```npm run build``` or ```yarn build``` to bundle the code.
 
-If it compiled without any error you may see two new folders `dist` and `build` generated in the root folder.
+If it compiled without any error you may see a new folder `dist` generated in the root folder with transpiled Javascript Code.
 
-![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/demo_files/Screenshot%202023-07-03%20172003.png)
+![App Screenshot](https://github.com/ananduremanan/Demo/blob/main/Screenshot%202023-12-12%20153616.png)
 
 _image: bundled output_
 
