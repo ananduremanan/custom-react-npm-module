@@ -11,6 +11,12 @@ This repo is aimed to describe the process of creating a custom NPM package/modu
   npm init
 ```
 
+Alternatively, you can use the following command to quickly generate a minimal boilerplate:
+
+```bash
+npm init -y
+```
+
 Add the necessary fields. After the successfull walkthrough a package.json will created and looks like below.
 
 ```bash
