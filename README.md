@@ -94,7 +94,7 @@ Since it is Typescript. I've also installed typescript, typescript react with it
 You will also need to install the Rollup plugins for Babel, CommonJS, and Node Resolve by running 
 
 ```bash
-npm install --save-dev @rollup/plugin-babel @rollup/plugin-commonjs @rollup/plugin-node-resolve rollup-plugin-terser
+npm install --save-dev @rollup/plugin-babel @rollup/plugin-commonjs @rollup/plugin-node-resolve @rollup/plugin-terser
 
 ```
 
