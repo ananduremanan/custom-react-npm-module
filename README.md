@@ -1,221 +1,177 @@
-# How to create a Custom NPM Module with React Components?
+# How to create a Custom NPM Module with React Components (2026 edition)
 
-This repo is aimed to describe the process of creating a custom NPM package/module with React.JS components. It will guide you through the steps of setting up your development environment, writing and exporting your components, and publishing your package to the NPM registry[Optional]. Additionally, it will provide tips and best practices for maintaining and updating your package.
+This repo shows the modern, low-config way to build a React component library and publish it to npm. It replaces the old Babel + hand-rolled Rollup config with **[tsup](https://tsup.egoist.dev/)**, an esbuild-powered bundler that needs almost no setup and outputs CJS, ESM, and type declarations from a single command.
 
-## Installation
+## Why tsup instead of Rollup + Babel?
 
-**Step 1:** Make a directory and initialize npm.
+- One command builds CJS + ESM + `.d.ts` files — no separate type-bundling plugin
+- esbuild under the hood, so builds are near-instant even as the library grows
+- Zero Babel config, zero manual plugin wiring
+- Understands `"use client"` directives, so your components stay compatible with Next.js App Router consumers
 
-```bash
-  mkdir custom-npm-package
-  npm init
+If you also want a live component playground with Storybook, or need custom CSS/Tailwind handling baked into the build, **Vite library mode** is the other solid 2026 choice — but for a pure component package, tsup is simpler.
+
+## Project structure
+
 ```
-
-Alternatively, you can use the following command to quickly generate a minimal boilerplate:
-
-```bash
-npm init -y
-```
-
-Add the necessary fields. After the successfull walkthrough a package.json will created and looks like below.
-
-```bash
-{
-  "name": "gittuts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
-}
-```
-
-**Step 2:** Create a src folder in the root add a index.js/index.ts in it also create a component folder and creates some components in it.
-
-```bash
 src
 ├── components
-│   ├── Component1
-│   │   └── index.tsx
-│   ├── Component2
-│   │   └── index.tsx
-│   └── Component3
+│   └── Button
 │       └── index.tsx
 └── index.ts
 ```
 
-**Step 3:** Now, Add react and react-dom as peer-dependencies and dev-dependencies. 
+## Step 1: Initialize the project
 
 ```bash
-  yarn add react react-dom --dev
-
-  or
-
-  npm install react react-dom --dev
+mkdir custom-react-npm-module
+cd custom-react-npm-module
+npm init -y
 ```
 
-The final package.json may looks like below.
+## Step 2: Install dependencies
+
+React and React DOM are **peer dependencies** — the consuming app supplies them, you don't bundle them.
 
 ```bash
-  {
-  "name": "custom-npm-package",
+npm install --save-dev react react-dom @types/react @types/react-dom typescript tsup
+```
+
+## Step 3: Write your components
+
+```tsx
+// src/components/Button/index.tsx
+import React from "react";
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
+}
+
+export const Button = ({ label, ...rest }: ButtonProps) => {
+  return <button {...rest}>{label}</button>;
+};
+```
+
+```ts
+// src/index.ts
+export { Button } from "./components/Button";
+export type { ButtonProps } from "./components/Button";
+```
+
+## Step 4: Configure tsup
+
+```ts
+// tsup.config.ts
+import { defineConfig } from "tsup";
+
+export default defineConfig({
+  entry: ["src/index.ts"],
+  format: ["cjs", "esm"],
+  dts: true,
+  splitting: false,
+  sourcemap: true,
+  clean: true,
+  minify: true,
+  external: ["react", "react-dom"],
+});
+```
+
+## Step 5: package.json
+
+The `exports` field is what makes the package work cleanly for both CJS and ESM consumers, and for tools that read `types` directly.
+
+```json
+{
+  "name": "custom-react-npm-module",
   "version": "1.0.0",
-  "description": "react custom npm module",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx babel src --out-file index.js --extensions .ts,.tsx"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
   },
-  "author": "Anandhu",
-  "license": "ISC",
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.34",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.4"
+    "react": ">=18",
+    "react-dom": ">=18"
   }
 }
 ```
 
-Since it is Typescript. I've also installed typescript, typescript react with it.
-
-**Step 4:** Its time to bundle the code. Install [rollup.js](https://rollupjs.org/)
+Run the build:
 
 ```bash
-  npm install --save react rollup
+npm run build
 ```
-You will also need to install the Rollup plugins for Babel, CommonJS, and Node Resolve by running 
+
+This generates a `dist/` folder with `index.js` (CJS), `index.mjs` (ESM), and `index.d.ts` (types) — all in one pass.
+
+## Step 6: Test it locally before publishing
+
+`npm link` still works and is the fastest local-testing loop:
 
 ```bash
-npm install --save-dev @rollup/plugin-babel @rollup/plugin-commonjs @rollup/plugin-node-resolve @rollup/plugin-terser
+# in this package's root
+npm link
 
+# in your test app's root
+npm link custom-react-npm-module
 ```
 
-**Step 5:**  Configure Rollup
-
-Create a `rollup.config.mjs` or `rollup.config.js` file in the root of your project. In this file, configure Rollup to bundle your React component by specifying the input file, output format, and plugins to use. Here is an example configuration:
+Or pack it into a tarball and install that directly, which is closer to what a real consumer will experience:
 
 ```bash
-import babel from 'rollup-plugin-babel';
-import resolve from '@rollup/plugin-node-resolve';
-import external from 'rollup-plugin-peer-deps-external';
-import terser from '@rollup/plugin-terser';
-import typescript from "rollup-plugin-typescript2"; // For Typescript
-
-export default [
-  {
-    input: './src/index.ts',
-    output: [
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-      },
-      {
-        file: 'dist/index.es.js',
-        format: 'es',
-        exports: 'named',
-      }
-    ],
-    plugins: [
-      babel({
-        exclude: 'node_modules/**',
-        presets: ['@babel/preset-react']
-      }),
-      external({
-        includeDependencies: true
-      }),
-      resolve(),
-      terser(),
-      typescript({ useTsconfigDeclarationDir: true }),
-    ]
-  }
-];
-
+npm pack
+# in the other project
+npm install ../custom-react-npm-module/custom-react-npm-module-1.0.0.tgz
 ```
 
-To our package.json, let's add this as build command so that we won't have to type it repeatedly. Under "scripts" in package.json add the following.
+## Step 7: Use it in a host project
+
+```tsx
+import { Button } from "custom-react-npm-module";
+
+function App() {
+  return <Button label="Click me" onClick={() => console.log("clicked")} />;
+}
+```
+
+## Step 8: Publish to npm
 
 ```bash
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx rollup -c"
-  }
+npm login
+npm publish
 ```
 
-now we can simply use ```npm run build``` or ```yarn build``` to bundle the code.
+`prepublishOnly` runs the build automatically before publish, so `dist/` is always fresh.
 
-If it compiled without any error you may see a new folder `dist` generated in the root folder with transpiled Javascript Code.
+## Optional: versioning with Changesets
 
-![App Screenshot](https://github.com/ananduremanan/Demo/blob/main/Screenshot%202023-12-12%20153616.png)
-
-_image: bundled output_
-
-Note: that if you're using a build tool like Webpack, you may not need to use npx babel at all. Instead, you can use a TypeScript loader like ts-loader or awesome-typescript-loader that will transpile and transform your TypeScript files as part of the build process.
-
-**Step 6:** Lets pack it so we can use/test it in other projects. Run the following command from  the root folder.
+For anything beyond a solo throwaway package, [Changesets](https://github.com/changesets/changesets) is now the standard way to manage version bumps and changelogs instead of manually editing `package.json`:
 
 ```bash
-  npm pack
+npm install --save-dev @changesets/cli
+npx changeset init
+npx changeset          # describe your change, pick a bump type
+npx changeset version  # bumps version + writes CHANGELOG.md
+npx changeset publish  # publishes to npm
 ```
-This will generate a .tgz file that we can use to install the package locally in other projects.
 
-Alternatively, you can link the package for testing purpose(Recommended).
+## Optional: Storybook for isolated component development
 
-Using `npm link` in your package's root directory, create a global symlink of your package. A shortcut that directs your system to another directory or file is known as a "symlink," short for symbolic link.
-
-Now, create an another application and tell the application to use the global symlink with `npm link your-package-name`. This way, we could save a lot of time.
-
-**Step 7:** Navigate to your other project's directory and install your package using npm install <path to tarball file>. For example:
+Storybook is still the standard tool for viewing and testing components without a host app:
 
 ```bash
-  npm i 'path_to_the_packed_file'
+npx storybook@latest init
 ```
-
-**Step 8:** In your host project's code you can import and use your component as follows:
-
-```bash
-  import logo from "./logo.svg";
-  import "./App.css";
-  import TextInput from "my_npm_package"; // Importing from the package
-  import { useState } from "react";
-
-  function App() {
-    const [value, setValue] = useState('');
-    console.log(value)
-
-    function handleChange(e) {
-      setValue(e.target.value);
-    }
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Custom npm module.</p>
-          <TextInput label="Name" value={value} onChange={handleChange} />
-        </header>
-      </div>
-    );
-  }
-
-  export default App;
-
-```
-
-Additionally we can use packages like [storybook.js](https://storybook.js.org/) to build UI components and pages in isolation and by doing so we could see the changes that happens to our components without the need of installing it in a host application. You could find the documention for implementing story book [here](https://storybook.js.org/docs/react/get-started/install/).
-
-**Step 9:** Publishing our package to NPM Registry
-
-To publish a package to the npm registry, we need to follow these steps:
-
-- Create an npm account on [npmjs.com](https://www.npmjs.com/signup).
-- Sign in to npm from your terminal using the ```npm login``` command.
-- Prepare your package for publishing.
-- Publish the package from the terminal using the ```npm publish``` command.
