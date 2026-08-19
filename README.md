@@ -175,3 +175,7 @@ Storybook is still the standard tool for viewing and testing components without 
 ```bash
 npx storybook@latest init
 ```
+
+# More Easy Way
+
+You can simply prompt Claude Code or Codex to make one for you 🥲
